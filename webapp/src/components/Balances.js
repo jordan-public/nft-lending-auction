@@ -5,19 +5,25 @@ import {Table} from 'react-bootstrap'
 import Asset from './Asset'
 import AppItem from './AppItem'
 import HouseNFT from '../artifacts/contracts/HouseNFT.sol/HouseNFT.json'
+import LendingAuction from '../artifacts/contracts/LendingAuction.sol/LendingAuction.json'
 import getContractAddress from '../util/getContractAddress'
 import { ethers } from 'ethers'
 
 function Balances(props) {
-    const [numTOkens, setNumTokens] = React.useState(0);
+    const [numTokens, setNumTokens] = React.useState(0);
+    const [numAuctions, setNumAuctions] = React.useState(0);
 
     React.useEffect(() => {
         (async () => {
             const provider = new ethers.providers.Web3Provider(window.ethereum)
             const a = await getContractAddress('HouseNFT')
+            const al = await getContractAddress('LendingAuction')
             const houseNFTContract = new ethers.Contract(a, HouseNFT.abi, provider)
+            const lendingAuctionContract = new ethers.Contract(al, LendingAuction.abi, provider)
             const h = await houseNFTContract.lastHouseId()
+            const n = await lendingAuctionContract.numAuctions()
             setNumTokens(h.toNumber()) 
+            setNumAuctions(n.toNumber())
         }) ()
     });
 
@@ -31,7 +37,8 @@ function Balances(props) {
                 </tr>
             </thead>
             <tbody>
-                {[...Array(numTOkens).keys()].map(i => <Asset id={i} tokenId={i}></Asset>)}
+            {[...Array(numTokens).keys()].map(i => <Asset id={i} tokenId={i}></Asset>)}
+            {[...Array(numAuctions).keys()].map(i => <AppItem id={i} aId={i}></AppItem>)}                
              </tbody>
         </Table>
 
@@ -42,9 +49,3 @@ function Balances(props) {
 // From: <a href="https://icons8.com/icon/11920/house">House icon by Icons8</a>
 
 export default Balances;
-
-
-/*
-*/
-//{props.accountInfo.assets.filter(asset => asset.amount>=0).map(asset => <Asset key={asset['asset-id']} asset={asset} algodClient={props.algodClient} wallet={props.wallet} account={props.account} accountInfo={props.accountInfo} refreshAccountInfo={props.refreshAccountInfo} />)}
-//{props.accountInfo['created-apps'].filter(app => app.params['approval-program'].startsWith("")).map(app => <AppItem  key={app.id} app={app} algodClient={props.algodClient} wallet={props.wallet} account={props.account} accountInfo={props.accountInfo} refreshAccountInfo={props.refreshAccountInfo}/>)}

@@ -7,7 +7,7 @@ function AppItem(props) {
         <tr>
         <td>AUCTION
         </td>
-        <td>{props.app.id}</td>
+        <td>{props.aId}</td>
         <td>APP
         </td>
         </tr>

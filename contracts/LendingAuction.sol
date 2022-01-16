@@ -24,6 +24,8 @@ contract LendingAuction {
 
     LoanAuction[] public loanAuctions;
 
+    function numAuctions() external view returns (uint256) { return loanAuctions.length; }
+
     function startAuction(
         address collateralAddress,
         uint256 collateralId,

@@ -27,12 +27,6 @@ function Body(props) {
 
         <br/><br/><br/>
 
-        </>);
-}
-
-export default Body;
-
-/* 
         <Tabs activeKey={activeTab} transition={false} id="noanim-tab-example" onSelect={onSelect}>
             <Tab eventKey="list" title="Borrower">
                 <Borrower setActiveTab={setActiveTab} setAgrRoot={setLoanRoot}/>
@@ -41,4 +35,8 @@ export default Body;
                 <Lender agrRoot={loanRoot} />
             </Tab>
         </Tabs>
-*/
+    </>);
+}
+
+export default Body;
+
