@@ -1,3 +1,4 @@
+![NFT2DeFi Lending Auctions](doc/NFT2DeFi.png)
 # NFT2DeFi Lending Auctions
 NFT Lending protocol and dapp allows borrowers to find best lenders via auction and both sides to further engage in DeFi
 
