@@ -1,42 +1,14 @@
-# Advanced Sample Hardhat Project
+# NFT2DeFi Lending Auctions
+NFT Lending protocol and dapp allows borrowers to find best lenders via auction and both sides to further engage in DeFi
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
+## Description
+Owners of NFTs can get loans by using their NFTs as collateral. In order to find the best lender, they set up auctions, in which each lender competes for the lowest loan repayment amount.
+During the auction, each bidder (potential lender) deposits a specified amount in order to participate. The deposit is returned, as soon as a better bidder arrives, so if a bidder loses the auction, their deposit is immediately returned. 
+After the auction the borrower can activate the loan to use and further engage in DeFi. The lender can safely profit from the collateralized loan repayment or liquidation. If the lender does not authorize the transfer or has insufficient funds, the borrower gets to keep the deposit, get the collateral back and terminate the loan. If the borrower fails to repay the loan on time, the lender can liquidate the loan and keep the collateral. If the borrower fails to initiate the loan, he can keep the deposit, but lose the collateral. 
 
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
+## How it’s made:
+Written in Solidity and JavaScript and using React and ethers-js.
+Using Hardhat toolset.
+Smart contracts deployed on Polygon Mumbai Testnet and Harmony Testnet Shard 0. 
 
-Try running some of the following tasks:
-
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-npx hardhat help
-REPORT_GAS=true npx hardhat test
-npx hardhat coverage
-npx hardhat run scripts/deploy.js
-node scripts/deploy.js
-npx eslint '**/*.js'
-npx eslint '**/*.js' --fix
-npx prettier '**/*.{json,sol,md}' --check
-npx prettier '**/*.{json,sol,md}' --write
-npx solhint 'contracts/**/*.sol'
-npx solhint 'contracts/**/*.sol' --fix
-```
-
-# Etherscan verification
-
-To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
-
-In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
-
-```shell
-hardhat run --network ropsten scripts/deploy.js
-```
-
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
-
-```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
-```
+The list of auctions, the auction process and the lending process are all in one smart contract. 
