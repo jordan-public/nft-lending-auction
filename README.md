@@ -13,3 +13,6 @@ Using Hardhat toolset.
 Smart contracts deployed on Polygon Mumbai Testnet and Harmony Testnet Shard 0. 
 
 The list of auctions, the auction process and the lending process are all in one smart contract. 
+
+## Demo
+[Demo](https://gateway.pinata.cloud/ipfs/QmYkpybwgRj7HfmSVhu18evGEaEGhvXnDWhSJCJRPJwXbw/)
