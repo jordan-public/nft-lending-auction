@@ -1,1 +1,0 @@
-ln -s "$PWD/../artifacts/" "$PWD/src"
