@@ -2,8 +2,11 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap'
-import OptInAsset from './OptInAsset'
+import Authorize from './Authorize'
 import AuctionInfo from './AuctionInfo'
+import LendingAuction from '../artifacts/contracts/LendingAuction.sol/LendingAuction.json'
+import getContractAddress from '../util/getContractAddress'
+import { ethers } from 'ethers'
 
 function Lender(props) {
     const [appID, setAppID] = React.useState(0)
@@ -11,88 +14,38 @@ function Lender(props) {
     const [refreshAuctionInfo, setRefreshAuctionInfo] = React.useState(0)
     const doRefreshAuctionInfo = () => { setRefreshAuctionInfo(Math.random()) }
 
-    const onBid = async () => {/*!!!
-        const app = await props.algodClient.getApplicationByID(appID).do().catch((_) => { return undefined })
-        if (app === undefined) { window.alert("Auction does not exist."); return }
-        const nftID = app.params['global-state'].find(p => atob(p.key) === "nft_id").value.uint
-        const auctionEnd = app.params['global-state'].find(p => atob(p.key) === "auction_end").value.uint * 1000
-        const loanAmount = app.params['global-state'].find(p => atob(p.key) === "loan_amount").value.uint
-        const currentRepayAmount = app.params['global-state'].find(p => atob(p.key) === "repay_amount").value.uint
-        const minBidDec = app.params['global-state'].find(p => atob(p.key) === "min_bid_dec_f").value.uint
-        const losingLender = algosdk.encodeAddress(new Buffer(app.params['global-state'].find(p => atob(p.key) === "winning_lender").value.bytes, 'base64'))
+    const onBid = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const al = await getContractAddress('LendingAuction')
+        const lendingAuctionContract = new ethers.Contract(al, LendingAuction.abi, provider)
+        const signer = provider.getSigner()
+        const lendingAuctionContractWithSigner = lendingAuctionContract.connect(signer)
+        const tx =  await lendingAuctionContractWithSigner.bid(
+            appID,
+            ethers.utils.parseEther(repaymentAmount.toString())
+        )
+        await tx.wait()
+        window.alert("Confirmed"+tx.hash)
+    }
 
-        if (Date.now() > auctionEnd) {
-            window.alert("The auction has ended.")
-            return
-        }
-
-        const r = Math.floor(repaymentAmount * 1000000)
-        const maxR = loanAmount + minBidDec * (currentRepayAmount-loanAmount) / 10000
-        if (r <= loanAmount ||
-            r > maxR) {
-            window.alert(
-                "Repayment amount must be between (>) " + 
-                loanAmount / 1000000.0 + " and (<=) " +
-                maxR / 1000000.0 + ".")
-            return
-        }
-
-        const params = await props.algodClient.getTransactionParams().do()
-        const appAddr = algosdk.getApplicationAddress(appID)
-
-        // Fund contract with 3 * min tx fee
-        const fundTx = algosdk.makePaymentTxnWithSuggestedParams(
-            props.account.address, appAddr, 3000 + loanAmount, 
-            undefined, undefined, params)
-
-        const appArgs = [];
-        appArgs.push(new Uint8Array(Buffer.from("bid")))
-        appArgs.push(algosdk.encodeUint64(r))
-        const adrList =  (losingLender === zeroAddress)?undefined:[losingLender]
-        const bidTx = algosdk.makeApplicationNoOpTxn(props.account.address, params, appID, appArgs, adrList, undefined, [nftID])
-
-        await signSendAwait([fundTx, bidTx], props.wallet, props.algodClient, () => { props.refreshAccountInfo(); doRefreshAuctionInfo() })
-    */}
-
-    const onLiquidate = async () => {/*!!!
-        const app = await props.algodClient.getApplicationByID(appID).do().catch((_) => { return undefined })
-        if (app === undefined) { window.alert("Auction does not exist."); return }
-        const repaymentDeadline = app.params['global-state'].find(p => atob(p.key) === "repay_deadline").value.uint * 1000
-        const winningLender = algosdk.encodeAddress(new Buffer(app.params['global-state'].find(p => atob(p.key) === "winning_lender").value.bytes, 'base64'))
-        const nftID = app.params['global-state'].find(p => atob(p.key) === "nft_id").value.uint
-        const borrower = app.params.creator
-
-        if (Date.now() <= repaymentDeadline) {
-            window.alert("Cannot liquidate before the repayment deadline.")
-            return
-        }
-
-        if (props.account.address !== winningLender) {
-            window.alert("Cannot liquidate - you are not the lender.")
-            return
-        }
-
-        const params = await props.algodClient.getTransactionParams().do()
-        const appAddr = algosdk.getApplicationAddress(appID)
-
-        // Fund contract with 3 * min tx fee
-        const fundTx = algosdk.makePaymentTxnWithSuggestedParams(
-            props.account.address, appAddr, 3000, 
-            undefined, undefined, params)
-
-        const appArgs = [];
-        appArgs.push(new Uint8Array(Buffer.from("liquidate")))
-        const liquidateTx = algosdk.makeApplicationNoOpTxn(props.account.address, params, appID, appArgs, [borrower], undefined, [nftID])
-
-        await signSendAwait([fundTx, liquidateTx], props.wallet, props.algodClient, () => { props.refreshAccountInfo(); doRefreshAuctionInfo() })
-        */
-        }
+    const onLiquidate = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const al = await getContractAddress('LendingAuction')
+        const lendingAuctionContract = new ethers.Contract(al, LendingAuction.abi, provider)
+        const signer = provider.getSigner()
+        const lendingAuctionContractWithSigner = lendingAuctionContract.connect(signer)
+        const tx =  await lendingAuctionContractWithSigner.liquidateLoan(
+            appID,
+        )
+        await tx.wait()
+        window.alert("Confirmed"+tx.hash)
+    }
 
     return (<>
         <Container fluid="md">
             <Row>
                 <Col>
-                    <OptInAsset algodClient={props.algodClient} account={props.account} wallet={props.wallet} refreshAccountInfo={props.refreshAccountInfo} />
+                    <Authorize/>
                 </Col>
                 <Col>
                     <Card border="primary" style={{ width: '48rem' }}>

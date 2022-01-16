@@ -14,7 +14,6 @@ function Body(props) {
         setActiveTab(key);
     }
 
-    //!!!if (!accountInfo) return("Please connect.")
     return (<>
         <Accordion defaultActiveKey="0">
         <Accordion.Item eventKey="0">

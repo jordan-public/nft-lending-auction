@@ -45,7 +45,4 @@ function Balances(props) {
      </>);
 }
 
-// Using: https://img.icons8.com/color/48/000000/cottage.png
-// From: <a href="https://icons8.com/icon/11920/house">House icon by Icons8</a>
-
 export default Balances;

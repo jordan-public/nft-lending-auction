@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 
 contract LendingAuction {
-    uint256 constant DENOMINATOR = 1000000;
+    uint256 constant DENOMINATOR = 10000;
 
     struct LoanAuction {
         address borrower;

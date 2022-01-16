@@ -39,7 +39,7 @@ function Asset(props) {
     if (!assetURI) return(<></>);
     return (
         <tr>
-        <td>{assetURI}
+        <td><a href={assetURI} target="_blank">NFT</a>
         </td>
         <td>{props.tokenId}</td>
         <td>{assetHolding}
