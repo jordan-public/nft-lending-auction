@@ -1,8 +1,7 @@
+// SPDX-License-Identifier: BUSL-1.1
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import {Table} from 'react-bootstrap'
-import algosdk from 'algosdk'
-import zeroAddress from '../util/zeroAddress';
 
 function AuctionInfo(props) {
     const [app, setApp] = React.useState();
@@ -12,8 +11,8 @@ function AuctionInfo(props) {
         (async () => {
             try {
                 setApp(await props.algodClient.getApplicationByID(props.auctionID).do())
-                const appAddr = await algosdk.getApplicationAddress(props.auctionID)
-                setAppAccountInfo(await props.algodClient.accountInformation(appAddr).do())
+                //!!!const appAddr = await algosdk.getApplicationAddress(props.auctionID)
+                //!!!setAppAccountInfo(await props.algodClient.accountInformation(appAddr).do())
             } catch (_) { setApp(null) }
         }) ()
     }, [props.algodClient, props.auctionID, props.refresh])
@@ -29,9 +28,10 @@ function AuctionInfo(props) {
     }
 
     function winningLender() {
-        const w = algosdk.encodeAddress(new Buffer(findParam("winning_lender").bytes, 'base64'))
-        if (w === zeroAddress) return "N/A"
-        return w
+        //!!!const w = algosdk.encodeAddress(new Buffer(findParam("winning_lender").bytes, 'base64'))
+        //!!!if (w === zeroAddress) return "N/A"
+        //!!!return w
+        return 0 //!!!
     }
 
     /*  Param names:

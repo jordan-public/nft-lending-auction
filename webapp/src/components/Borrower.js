@@ -1,11 +1,9 @@
+// SPDX-License-Identifier: BUSL-1.1
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap'
-import algosdk from 'algosdk'
-import signSendAwait from '../util/signSendAwait'
 import AuctionInfo from './AuctionInfo'
 import CreateAuction from './CreateAuction'
-import zeroAddress from '../util/zeroAddress'
 
 function Borrower(props) {
     const [appID, setAppID] = React.useState(0)
@@ -30,62 +28,63 @@ function Borrower(props) {
         }
 
         const params = await props.algodClient.getTransactionParams().do()
-        const appAddr = algosdk.getApplicationAddress(appID)
+        //!!!const appAddr = algosdk.getApplicationAddress(appID)
         
         // Fund contract with 100k min balance + 100k NFT opt-in + 3 * min tx fee
-        const fundTx = algosdk.makePaymentTxnWithSuggestedParams(
-            props.account.address, appAddr, 203000, 
-            undefined, undefined, params)
+        //!!!const fundTx = algosdk.makePaymentTxnWithSuggestedParams(
+        //!!!    props.account.address, appAddr, 203000, 
+        //!!!    undefined, undefined, params)
 
         const appArgs = [];
         appArgs.push(new Uint8Array(Buffer.from("start_auction")))
-        const startTx = algosdk.makeApplicationNoOpTxn(props.account.address, params, appID, appArgs, undefined, undefined, [nftID])
+        //!!!const startTx = algosdk.makeApplicationNoOpTxn(props.account.address, params, appID, appArgs, undefined, undefined, [nftID])
 
-        const nftDepositTx = algosdk.makeAssetTransferTxnWithSuggestedParams(
-            props.account.address, appAddr, 
-            undefined, undefined, 1, undefined, nftID, params)
+        //!!!const nftDepositTx = algosdk.makeAssetTransferTxnWithSuggestedParams(
+        //!!!    props.account.address, appAddr, 
+        //!!!    undefined, undefined, 1, undefined, nftID, params)
 
-            await signSendAwait([fundTx, startTx, nftDepositTx], props.wallet, props.algodClient, () => { props.refreshAccountInfo(); doRefreshAuctionInfo() })
+        //!!!    await signSendAwait([fundTx, startTx, nftDepositTx], props.wallet, props.algodClient, () => { props.refreshAccountInfo(); doRefreshAuctionInfo() })
     }
 
     const onCancelAuction = async () => {
-        const app = await props.algodClient.getApplicationByID(appID).do().catch((_) => { return undefined })
-        if (app === undefined) { window.alert("Auction does not exist."); return }
-        const winningLender = algosdk.encodeAddress(new Buffer(app.params['global-state'].find(p => atob(p.key) === "winning_lender").value.bytes, 'base64'))
-        const nftID = app.params['global-state'].find(p => atob(p.key) === "nft_id").value.uint
-        const borrower = app.params.creator
+        //!!!const app = await props.algodClient.getApplicationByID(appID).do().catch((_) => { return undefined })
+        //!!!if (app === undefined) { window.alert("Auction does not exist."); return }
+        //!!!const winningLender = algosdk.encodeAddress(new Buffer(app.params['global-state'].find(p => atob(p.key) === "winning_lender").value.bytes, 'base64'))
+        //!!const nftID = app.params['global-state'].find(p => atob(p.key) === "nft_id").value.uint
+        //!!!const borrower = app.params.creator
 
-        if (props.account.address !== borrower) {
-            window.alert("Not your auction.")
-            return
-        }
+        //!!!if (props.account.address !== borrower) {
+        //!!!    window.alert("Not your auction.")
+        //!!!    return
+        //!!!}
 
-        if (winningLender !== zeroAddress) {
-            window.alert("Cannot cancel auction with existing bidders.")
-            return
-        }
+        //!!!if (winningLender !== zeroAddress) {
+        //!!!    window.alert("Cannot cancel auction with existing bidders.")
+        //!!!    return
+        //!!!}
 
-        if (winningLender !== zeroAddress) {
-            window.alert("Cannot cancel auction with existing bidders.")
-            return
-        }
+        //!!!if (winningLender !== zeroAddress) {
+        //!!!    window.alert("Cannot cancel auction with existing bidders.")
+        //!!!    return
+        //!!!}
 
-        const params = await props.algodClient.getTransactionParams().do()
-        const appAddr = algosdk.getApplicationAddress(appID)
+        //!!!const params = await props.algodClient.getTransactionParams().do()
+        //!!!const appAddr = algosdk.getApplicationAddress(appID)
 
         // Fund contract with 100k to delete app + 3 * min tx fee
-        const fundTx = algosdk.makePaymentTxnWithSuggestedParams(
-            props.account.address, appAddr, 103000, 
-            undefined, undefined, params)
+        //!!!const fundTx = algosdk.makePaymentTxnWithSuggestedParams(
+        //!!!    props.account.address, appAddr, 103000, 
+        //!!!    undefined, undefined, params)
 
-        const appArgs = [];
-        appArgs.push(new Uint8Array(Buffer.from("cancel")))
-        const cancelTx = algosdk.makeApplicationDeleteTxn(props.account.address, params, appID, appArgs, undefined, undefined, [nftID])
+        //!!!const appArgs = [];
+        //!!!appArgs.push(new Uint8Array(Buffer.from("cancel")))
+        //!!!const cancelTx = algosdk.makeApplicationDeleteTxn(props.account.address, params, appID, appArgs, undefined, undefined, [nftID])
 
-        await signSendAwait([fundTx, cancelTx], props.wallet, props.algodClient, () => { props.refreshAccountInfo(); doRefreshAuctionInfo() })
+        //!!!await signSendAwait([fundTx, cancelTx], props.wallet, props.algodClient, () => { props.refreshAccountInfo(); doRefreshAuctionInfo() })
     }
 
     const onBorrow = async () => {
+        /*!!!
         const app = await props.algodClient.getApplicationByID(appID).do().catch((_) => { return undefined })
         if (app === undefined) { window.alert("Auction does not exist."); return }
         const auctionEnd = app.params['global-state'].find(p => atob(p.key) === "auction_end").value.uint * 1000
@@ -114,9 +113,10 @@ function Borrower(props) {
         const borrowTx = algosdk.makeApplicationNoOpTxn(props.account.address, params, appID, appArgs)
 
         await signSendAwait([borrowTx], props.wallet, props.algodClient, () => { props.refreshAccountInfo(); doRefreshAuctionInfo() })
+*/
     }
 
-    const onRepay = async () => {
+    const onRepay = async () => {/*!!!
         const app = await props.algodClient.getApplicationByID(appID).do().catch((_) => { return undefined })
         if (app === undefined) { window.alert("Auction does not exist."); return }
         const auctionEnd = app.params['global-state'].find(p => atob(p.key) === "auction_end").value.uint * 1000
@@ -159,7 +159,9 @@ function Borrower(props) {
         const repayTx = algosdk.makeApplicationDeleteTxn(props.account.address, params, appID, appArgs, [lender], undefined, [nftID])
 
         await signSendAwait([fundTx, repayTx], props.wallet, props.algodClient, () => { props.refreshAccountInfo(); doRefreshAuctionInfo() })
-    }
+
+        */
+        }
 
     return (<>
         <Container fluid="md">

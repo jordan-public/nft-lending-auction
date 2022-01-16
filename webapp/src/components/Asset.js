@@ -1,41 +1,49 @@
+// SPDX-License-Identifier: BUSL-1.1
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Button } from 'react-bootstrap'
-import algosdk from 'algosdk'
-import signSendAwait from '../util/signSendAwait'
+import HouseNFT from '../artifacts/contracts/HouseNFT.sol/HouseNFT.json'
+import LendingAuction from '../artifacts/contracts/LendingAuction.sol/LendingAuction.json'
+import getContractAddress from '../util/getContractAddress'
+import { ethers } from 'ethers'
 
 function Asset(props) {
-    const [assetInfo, setAssetInfo] = React.useState()
+    const [assetURI, setAssetURI] = React.useState()
+    const [assetHolding, setAssetHolding] = React.useState(0)
 
     React.useEffect(() => {
-        const fetchAssetInfo = async () => {
-            setAssetInfo(await props.algodClient.getAssetByID(parseInt(props.asset['asset-id'])).do())
-        }
-        fetchAssetInfo()
-    }, [props.asset, props.algodClient]);
-    
-    const onOptOutAset = async () => {
-        const params = await props.algodClient.getTransactionParams().do()
-        // create unsigned transaction
-        const txn = algosdk.makeAssetTransferTxnWithSuggestedParams(props.account.address, props.account.address, assetInfo.params.creator, undefined, 0, undefined, props.asset['asset-id'], params);
-        //makeApplicationClearStateTxn(props.account.address, params, props.asset['asset-id']);
-        await signSendAwait([txn], props.wallet, props.algodClient, props.refreshAccountInfo)
+        (async () => {
+            const provider = new ethers.providers.Web3Provider(window.ethereum)
+            const a = await getContractAddress('HouseNFT')
+            const houseNFTContract = new ethers.Contract(a, HouseNFT.abi, provider)
+            const uri = await houseNFTContract.tokenURI(props.tokenId)
+            const account =(await provider.listAccounts())[0]
+            const holding = await houseNFTContract.balanceOf(account)
+            setAssetURI(uri)
+            setAssetHolding(holding.toNumber())
+        }) ()
+    }, [props.tokenId]);
+
+    const onAuthorize = async () => {
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        const a = await getContractAddress('HouseNFT')
+        const al = await getContractAddress('LendingAuction')
+        const houseNFTContract = new ethers.Contract(a, HouseNFT.abi, provider)
+        const signer = provider.getSigner()
+        const houseNFTContractWithSigner = houseNFTContract.connect(signer)
+        const tx =  await houseNFTContractWithSigner.approve(al, props.tokenId)
+        await tx.wait()
+        window.alert("Confirmed"+tx.hash)
     }
 
-    if (!assetInfo) return(<></>);
+    if (!assetURI) return(<></>);
     return (
         <tr>
-        <td>{assetInfo.params.total === 1 ?
-                <a href={assetInfo.params.url} target="popup">{assetInfo.params['unit-name']}</a>
-                :
-                assetInfo.params['unit-name']}
+        <td>{assetURI}
         </td>
-        <td>{props.asset['asset-id']}</td>
-        <td>{assetInfo.params.total === 1?
-                props.asset.amount + " NFT"
-                :
-                props.asset.amount / (10 ** parseInt(assetInfo.params.decimals))}
-            {" "}{props.asset.amount ===  0?<Button onClick={onOptOutAset}>Opt out</Button>:""}
+        <td>{props.tokenId}</td>
+        <td>{assetHolding}
+            {" "}<Button onClick={onAuthorize}>Authorize</Button>
         </td>
         </tr>
 

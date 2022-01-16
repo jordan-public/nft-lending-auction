@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: BUSL-1.1
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Container, Navbar } from 'react-bootstrap'
@@ -8,7 +9,7 @@ function NavigationBar(props) {
         <Navbar className="bg-light justify-content-between">
             <Container>
                 <Navbar.Brand variant="primary"> NFT Loans</Navbar.Brand>
-                <Navbar.Text> <Account wallet={props.wallet} account={props.account} setAccount={props.setAccount}/> </Navbar.Text>
+                <Navbar.Text> <Account/> </Navbar.Text>
             </Container>
         </Navbar>
     );

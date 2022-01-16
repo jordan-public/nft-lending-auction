@@ -1,19 +1,19 @@
+// SPDX-License-Identifier: BUSL-1.1
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Form, Button, Card } from 'react-bootstrap'
-import algosdk from 'algosdk'
-import signSendAwait from '../util/signSendAwait'
 
 function OptInAsset(props) {
     const [assetId, setAsseId] = React.useState(0)
 
-    const onOptIn = async () => {
+    const onOptIn = async () => {/*!!!
         const params = await props.algodClient.getTransactionParams().do()
 
         // create unsigned transaction
         let txn = algosdk.makeAssetTransferTxnWithSuggestedParams(props.account.address, props.account.address, undefined, undefined, 0, undefined, assetId, params)
 
         await signSendAwait([txn], props.wallet, props.algodClient, props.refreshAccountInfo)
+        */
     }
 
     return (<>

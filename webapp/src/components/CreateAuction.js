@@ -1,10 +1,7 @@
+// SPDX-License-Identifier: BUSL-1.1
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Form, Button, Card } from 'react-bootstrap'
-import algosdk from 'algosdk'
-import signSendAwait from '../util/signSendAwait'
-import * as nftloan_approval from '../teal/nftloan_approval.teal'
-import * as nftloan_clear_state from '../teal/nftloan_clear_state.teal'
 
 function CreateAuction(props) {
     const DENOMINATOR = 10000
@@ -23,7 +20,7 @@ function CreateAuction(props) {
             return compiledBytes;
     }
 
-    const onCreateAuction = async () => {
+    const onCreateAuction = async () => {/*!!!
         const approvalProgram = await compileProgram(nftloan_approval.default)
         const clearProgram = await compileProgram(nftloan_clear_state.default)
 
@@ -52,6 +49,7 @@ function CreateAuction(props) {
             appArgs
         )
         await signSendAwait([txn], props.wallet, props.algodClient, props.refreshAccountInfo)
+        */
     }
 
     return (<>

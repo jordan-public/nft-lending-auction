@@ -1,11 +1,9 @@
+// SPDX-License-Identifier: BUSL-1.1
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap'
-import algosdk from 'algosdk'
 import OptInAsset from './OptInAsset'
 import AuctionInfo from './AuctionInfo'
-import signSendAwait from '../util/signSendAwait'
-import zeroAddress from '../util/zeroAddress'
 
 function Lender(props) {
     const [appID, setAppID] = React.useState(0)
@@ -13,7 +11,7 @@ function Lender(props) {
     const [refreshAuctionInfo, setRefreshAuctionInfo] = React.useState(0)
     const doRefreshAuctionInfo = () => { setRefreshAuctionInfo(Math.random()) }
 
-    const onBid = async () => {
+    const onBid = async () => {/*!!!
         const app = await props.algodClient.getApplicationByID(appID).do().catch((_) => { return undefined })
         if (app === undefined) { window.alert("Auction does not exist."); return }
         const nftID = app.params['global-state'].find(p => atob(p.key) === "nft_id").value.uint
@@ -54,9 +52,9 @@ function Lender(props) {
         const bidTx = algosdk.makeApplicationNoOpTxn(props.account.address, params, appID, appArgs, adrList, undefined, [nftID])
 
         await signSendAwait([fundTx, bidTx], props.wallet, props.algodClient, () => { props.refreshAccountInfo(); doRefreshAuctionInfo() })
-    }
+    */}
 
-    const onLiquidate = async () => {
+    const onLiquidate = async () => {/*!!!
         const app = await props.algodClient.getApplicationByID(appID).do().catch((_) => { return undefined })
         if (app === undefined) { window.alert("Auction does not exist."); return }
         const repaymentDeadline = app.params['global-state'].find(p => atob(p.key) === "repay_deadline").value.uint * 1000
@@ -87,7 +85,8 @@ function Lender(props) {
         const liquidateTx = algosdk.makeApplicationNoOpTxn(props.account.address, params, appID, appArgs, [borrower], undefined, [nftID])
 
         await signSendAwait([fundTx, liquidateTx], props.wallet, props.algodClient, () => { props.refreshAccountInfo(); doRefreshAuctionInfo() })
-    }
+        */
+        }
 
     return (<>
         <Container fluid="md">
