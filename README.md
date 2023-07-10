@@ -1,3 +1,5 @@
+[This project](https://ethglobal.com/showcase/nft2defi-o4x4e) was built at the [NFTHack 2022](https://ethglobal.com/events/nfthack2022) hackathon.
+ 
 ![NFT2DeFi Lending Auctions](doc/NFT2DeFi.png)
 # NFT2DeFi Lending Auctions
 NFT Lending protocol and dapp allows borrowers to find best lenders via auction and both sides to further engage in DeFi
